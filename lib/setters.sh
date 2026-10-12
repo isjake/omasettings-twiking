@@ -142,6 +142,7 @@ set_key_apply() {
       # The toggle script has no absolute set, so only flip when the requested
       # state differs from the live one — repeated clicks stay idempotent.
       [[ $(nightlight_enabled) == "$value" ]] || omarchy-toggle-nightlight ;;
+    single-window-shape) window_shape_set "$value" ;;
     bar-position)
       case $value in
         top|bottom|left|right) omarchy bar position "$value" ;;
