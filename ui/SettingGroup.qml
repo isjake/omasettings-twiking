@@ -34,10 +34,19 @@ Column {
     if (!group.nav || group.nav.searching !== true) return false
     var kids = groupContent.children
     for (var i = 0; i < kids.length; i++) {
-      // A Repeater sits among the rows it made, visible and no height at all.
-      // Counting it as content left every heading standing over an emptied
-      // group.
-      if (kids[i].visible === true && kids[i].height > 0) return false
+      // Asked of the row itself, never of its `visible`. QML's `visible` is
+      // *effective* visibility — false whenever any ancestor is hidden — so a
+      // group deciding its own `visible` from its children's `visible` reads
+      // a value that depends on the answer. Hiding the window hid every row,
+      // every group under a search then counted itself empty, and reopening
+      // the window drew the page blank until the search was cleared.
+      //
+      // `searchHidden` is the row's own verdict on the search term and
+      // depends on nothing above it. `implicitHeight` and not `height` for the
+      // same reason: a laid-out height is zero while the group is hidden. A
+      // Repeater sits among the rows it made and asks for no height, which is
+      // what keeps it from counting as content.
+      if (kids[i].searchHidden !== true && kids[i].implicitHeight > 0) return false
     }
     return true
   }
