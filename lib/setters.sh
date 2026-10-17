@@ -151,6 +151,9 @@ set_key_apply() {
       if [[ $value == false && $(nightlight_enabled) != "false" ]]; then
         hyprctl hyprsunset temperature 6500 >/dev/null 2>&1
         hyprctl hyprsunset identity >/dev/null 2>&1
+        # The bar's night-light service never polls; Omarchy's toggle always
+        # tells it, so this off has to as well or the moon stays lit.
+        omarchy-shell -q nightlight refresh >/dev/null 2>&1
       else
         [[ $(nightlight_enabled) == "$value" ]] || omarchy-toggle-nightlight
       fi ;;
