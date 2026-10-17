@@ -38,7 +38,10 @@ bindings_migrate() {
   [[ $schema =~ ^[0-9]+$ ]] || return 0
   ((schema >= BINDINGS_SCHEMA)) && return 0
 
-  edit_bindings '
+  # The store only: rendering here would reload Hyprland for a change nobody
+  # made, and the next real change renders the block from what this wrote.
+  local next
+  next=$(jq -c --argjson v "$BINDINGS_SCHEMA" '
     def unescape: if type == "string"
       then gsub("\\\\\""; "\"") | gsub("\\\\\\\\"; "\\") else . end;
     if .bindings then
@@ -46,7 +49,8 @@ bindings_migrate() {
           | map(.keys |= unescape | .description |= unescape | .command |= unescape))
       | .bindings.disabled = ((.bindings.disabled // []) | map(unescape))
     else . end
-    | .bindingsSchema = $v' --argjson v "$BINDINGS_SCHEMA"
+    | .bindingsSchema = $v' <<<"$(read_store)") || return 0
+  write_file "$STORE" managed <<<"$next"
 }
 
 render_bindings() {
@@ -161,8 +165,9 @@ bindings_state() {
 }
 
 keys_cmd() {
-  bindings_migrate
   local action=${1:-} keys=${2:-} description=${3:-} command=${4:-}
+  # Before a change, never before a read: a list has no business writing.
+  [[ $action == list ]] || bindings_migrate
   case $action in
     list) bindings_state ;;
     add)
