@@ -365,7 +365,7 @@ it lands.
 ## How large it opens
 
 The card is nine tenths of the screen it opened on, capped at
-`Style.space(1400)` by `Style.space(900)`. The percentage is what makes it
+`Style.space(1400)` by `Style.space(1000)`. The percentage is what makes it
 feel like a window rather than a dialog on a laptop; the cap is what keeps it
 one on a 49" ultrawide, where nine tenths of 5120 px puts the sidebar a
 thousand pixels from the row it selects and stretches every line of text past
@@ -375,6 +375,10 @@ The caps are in `Style.space` units rather than raw pixels because the sidebar
 beside them is `Style.space(220)`: a fixed pixel cap would squeeze the content
 column as the text size grows. Below the caps nothing changed, so every screen
 that was already comfortable is untouched.
+
+The height cap is 1000 rather than 900 because of the sidebar: at 900 its
+twenty-odd pages no longer fit on a 1350-point-high screen, the last row sat
+against the "settings changed" footer, and an expanded parent scrolled.
 
 ## Rows that are not settings
 

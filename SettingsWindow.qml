@@ -1109,7 +1109,7 @@ Item {
       // sidebar beside them already tracks the text size, and every screen
       // small enough for the 90% to be the lower number is left alone.
       readonly property int maxWidth: Style.space(1400)
-      readonly property int maxHeight: Style.space(900)
+      readonly property int maxHeight: Style.space(1000)
       width: Math.min(Math.round(window.width * 0.9), maxWidth)
       height: Math.min(Math.round(window.height * 0.9), maxHeight)
       color: root.background
