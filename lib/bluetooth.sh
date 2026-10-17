@@ -8,7 +8,7 @@
 # `bluetoothctl devices [Paired|Connected]` prints "Device <mac> <name>".
 bt_addresses() {
   capture bluetoothctl devices ${1:+"$1"} \
-    | awk '$1 == "Device" { address = $2; $1 = ""; $2 = ""; sub(/^  /, ""); print address "\t" $0 }'
+    | awk '$1 == "Device" && $2 ~ /^([[:xdigit:]]{2}:){5}[[:xdigit:]]{2}$/ { address = $2; $1 = ""; $2 = ""; sub(/^  /, ""); print address "\t" $0 }'
 }
 
 # Kind and battery come from a per-device lookup, which is only worth doing
