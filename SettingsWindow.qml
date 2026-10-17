@@ -24,7 +24,7 @@ Item {
 
   // While the search box is being typed into it owns the keyboard, the same
   // way an open dropdown or a field being edited does.
-  readonly property bool searchFocused: searchField.activeFocus
+  readonly property bool searchFocused: (searchLoader.item ? searchLoader.item.activeFocus : false)
 
   // Which screen the window was opened on. Hyprland knows which one has the
   // focus; Quickshell knows the screens by name, and the two are matched here.
@@ -1194,8 +1194,8 @@ Item {
 
         // The two things every search box answers to.
         if (event.text === "/" || (ctrl && event.key === Qt.Key_F)) {
-          searchField.forceActiveFocus()
-          searchField.selectAll()
+          if (searchLoader.item) searchLoader.item.forceActiveFocus()
+          if (searchLoader.item) searchLoader.item.selectAll()
           event.accepted = true
           return
         }
@@ -1284,27 +1284,34 @@ Item {
 
             // Above the menu, because what it filters is the menu as much as
             // the page: pages with nothing to show leave the list entirely.
-            TextField {
-              id: searchField
+            // Qt 6.12 reads every clipboard change into each live text input
+            // without a size or time limit, so the field exists only while the
+            // window is shown and is gone once it is hidden.
+            Loader {
+              id: searchLoader
               Layout.fillWidth: true
               Layout.bottomMargin: Style.space(10)
-              placeholderText: "Search settings"
-              foreground: root.foreground
-              accent: root.accent
-              font.family: root.fontFamily
-              onTextChanged: root.searchQuery = text
-              // Escape gives the keyboard back to the list rather than closing
-              // the window out from under a search.
-              Keys.onPressed: function(event) {
-                if (event.key === Qt.Key_Escape) {
-                  if (text !== "") text = ""
-                  root.navTakeFocus()
-                  event.accepted = true
-                } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter
-                           || event.key === Qt.Key_Down) {
-                  root.navTakeFocus()
-                  root.navMove(1)
-                  event.accepted = true
+              active: root.shown
+              sourceComponent: TextField {
+                Component.onCompleted: text = root.searchQuery
+                placeholderText: "Search settings"
+                foreground: root.foreground
+                accent: root.accent
+                font.family: root.fontFamily
+                onTextChanged: root.searchQuery = text
+                // Escape gives the keyboard back to the list rather than closing
+                // the window out from under a search.
+                Keys.onPressed: function(event) {
+                  if (event.key === Qt.Key_Escape) {
+                    if (text !== "") text = ""
+                    root.navTakeFocus()
+                    event.accepted = true
+                  } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter
+                             || event.key === Qt.Key_Down) {
+                    root.navTakeFocus()
+                    root.navMove(1)
+                    event.accepted = true
+                  }
                 }
               }
             }
