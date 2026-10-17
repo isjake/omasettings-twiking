@@ -2,6 +2,13 @@
 
 One window for every Omarchy setting, from Hyprland to your keybindings to tmux.
 
+> **OmaSettings continues as [OmaControl](https://github.com/twiking/omacontrol).**
+> Click "Install OmaControl" in the corner of this window, or run
+> `omarchy plugin add https://github.com/twiking/omacontrol.git --enable`. Then
+> open OmaControl and press **Bring them over** on its Overview page: every
+> setting you made here comes across, and "Undo all" can still put each one
+> back.
+
 <p align="center"><img src="preview.png" alt="The OmaSettings window" width="800"></p>
 
 - **Find anything.** Type "blur" or "gaps" and every setting that touches it

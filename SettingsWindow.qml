@@ -1472,12 +1472,53 @@ Item {
               font.pixelSize: Style.font.caption
             }
 
+            // OmaSettings goes on as OmaControl. Said in the corner rather
+            // than over a page: it is about the window, not about any setting,
+            // and it is there every time, so it must not cost a page its top.
+            // The click installs OmaControl and opens it, where a button brings
+            // the settings across; this window cannot do that half, because the
+            // new one decides the shape it wants them in.
+            Item {
+              Layout.preferredHeight: Style.space(6)
+              visible: root.changedSettings.length > 0 && !root.busy && root.loaded
+            }
+
+            Column {
+              visible: !root.busy && root.loaded
+              spacing: Style.space(2)
+
+              Text {
+                textFormat: Text.PlainText
+                text: "\uf0aa  OmaSettings is now OmaControl"
+                color: root.accent
+                font.family: root.fontFamily
+                font.pixelSize: Style.font.caption
+              }
+
+              Text {
+                textFormat: Text.PlainText
+                text: "Install OmaControl · your settings come along"
+                color: successorMouse.containsMouse ? root.accent : root.muted
+                font.family: root.fontFamily
+                font.pixelSize: Style.font.caption
+                font.underline: successorMouse.containsMouse
+
+                MouseArea {
+                  id: successorMouse
+                  anchors.fill: parent
+                  anchors.margins: -Style.space(4)
+                  hoverEnabled: true
+                  cursorShape: Qt.PointingHandCursor
+                  onClicked: root.run(["successor", "start"])
+                }
+              }
+            }
+
             // Two unrelated notices, one under the other: the gap keeps the
             // update from reading as part of the reset above it.
             Item {
               Layout.preferredHeight: Style.space(6)
-              visible: root.changedSettings.length > 0
-                && !root.busy && root.loaded && root.selfBehind > 0
+              visible: !root.busy && root.loaded && root.selfBehind > 0
             }
 
             Column {
