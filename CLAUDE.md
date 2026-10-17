@@ -437,8 +437,14 @@ plugin rather than in a package.
 
 Both halves guard on `X-OmaSettings-Managed=true`: a file at that path without
 the marker is never written and never deleted, so a hand-written entry
-survives. Every failure in the script is a quiet exit — a launcher entry is a
-convenience, and none of it is worth interrupting the shell over.
+survives. A file that is not ours, or an entry that is already right, is a
+quiet exit; being *unable* to write one prints a single line to the journal.
+The entry went missing for eleven releases behind a script whose every branch
+exited 0, so "could not" and "nothing to do" must not look the same.
+
+The plugin's own directory comes from `Qt.resolvedUrl`, decoded, never from
+`manifest.__sourceDir`: the shell strips that field from a third-party
+manifest before handing it over.
 
 Changing either file means testing the whole cycle, not just the write:
 `omarchy plugin disable`, check the file is gone, `omarchy plugin enable`,

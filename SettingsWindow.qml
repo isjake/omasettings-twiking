@@ -61,7 +61,8 @@ Item {
   readonly property color hairline: Qt.rgba(foreground.r, foreground.g, foreground.b, 0.16)
   readonly property string fontFamily: Style.font.family
 
-  readonly property string helperPath: String(Qt.resolvedUrl("bin/omasettings")).replace(/^file:\/\//, "")
+  // Decoded, or a home directory with a space in it runs a path with %20 in it.
+  readonly property string helperPath: decodeURIComponent(String(Qt.resolvedUrl("bin/omasettings")).replace(/^file:\/\//, ""))
 
   // ---------------- state --------------------------------------------------
   property var state: ({})
