@@ -107,6 +107,7 @@ Item {
         }
 
         Text {
+          textFormat: Text.PlainText
           anchors.verticalCenter: parent.verticalCenter
           text: wifiRow.ssid
           color: Local.Palette.foreground
@@ -116,6 +117,7 @@ Item {
         }
 
         Text {
+          textFormat: Text.PlainText
           anchors.verticalCenter: parent.verticalCenter
           visible: wifiRow.secured
           text: "\uf023"
@@ -125,6 +127,7 @@ Item {
         }
 
         Text {
+          textFormat: Text.PlainText
           anchors.verticalCenter: parent.verticalCenter
           visible: wifiRow.saved && !wifiRow.active
           text: "saved"
@@ -141,6 +144,7 @@ Item {
         spacing: Style.space(8)
 
         Text {
+          textFormat: Text.PlainText
           anchors.verticalCenter: parent.verticalCenter
           text: wifiRow.signalStrength + "%"
           color: Local.Palette.muted
