@@ -24,7 +24,8 @@ Item {
 
   // While the search box is being typed into it owns the keyboard, the same
   // way an open dropdown or a field being edited does.
-  readonly property bool searchFocused: (searchLoader.item ? searchLoader.item.activeFocus : false)
+  readonly property bool searchFocused: searchInput ? searchInput.activeFocus : false
+  readonly property TextField searchInput: searchLoader.item as TextField
 
   // Which screen the window was opened on. Hyprland knows which one has the
   // focus; Quickshell knows the screens by name, and the two are matched here.
@@ -1194,8 +1195,10 @@ Item {
 
         // The two things every search box answers to.
         if (event.text === "/" || (ctrl && event.key === Qt.Key_F)) {
-          if (searchLoader.item) searchLoader.item.forceActiveFocus()
-          if (searchLoader.item) searchLoader.item.selectAll()
+          if (searchInput) {
+            searchInput.forceActiveFocus()
+            searchInput.selectAll()
+          }
           event.accepted = true
           return
         }
